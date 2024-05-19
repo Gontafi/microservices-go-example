@@ -1,0 +1,92 @@
+version: '3.9'
+services:
+  auth-app:
+    build:
+      context: ./user
+      dockerfile: Dockerfile
+    command: ["/bin/sh", "-c", "cp .env.example .env && ./server migrate up && ./server start"]
+    restart: always
+    ports:
+      - '8080:8080'
+      - '8081:8081'
+    networks:
+      - api
+  mysql-auth:
+    container_name: mysql-auth
+    image: mysql/mysql-server:8.0
+    restart: always
+    tty: true
+    environment:
+      MYSQL_DATABASE: 'auth'
+      MYSQL_USER: 'pass'
+      MYSQL_PASSWORD: 'pass'
+      MYSQL_ROOT_PASSWORD: 'pass'
+    ports:
+      - '3306:3306'
+    volumes:
+      - authdb:/var/lib/mysqlauth
+    networks:
+      - api
+  product-app:
+    build:
+      context: ./product
+      dockerfile: Dockerfile
+    restart: always
+    command: ["/bin/sh", "-c", "cp .env.example .env && ./server migrate up && ./server start"]
+    ports:
+      - '8082:8082'
+      - '8083:8083'
+    networks:
+      - api
+  mysql-product:
+    container_name: mysql-product
+    image: mysql/mysql-server:8.0
+    restart: always
+    tty: true
+    environment:
+      MYSQL_DATABASE: 'product'
+      MYSQL_USER: 'pass'
+      MYSQL_PASSWORD: 'pass'
+      MYSQL_ROOT_PASSWORD: 'pass'
+    ports:
+      - '3307:3306'
+    volumes:
+      - productdb:/var/lib/mysqlproduct
+    networks:
+      - api
+  order-app:
+    build:
+      context: ./orders
+      dockerfile: Dockerfile
+    restart: always
+    command: ["/bin/sh", "-c", "cp .env.example .env && ./server migrate up && ./server start"]
+    ports:
+      - '8084:8084'
+    networks:
+      - api
+  mysql-order:
+    container_name: mysql-order
+    image: mysql/mysql-server:8.0
+    restart: always
+    tty: true
+    environment:
+      MYSQL_DATABASE: 'order'
+      MYSQL_USER: 'pass'
+      MYSQL_PASSWORD: 'pass'
+      MYSQL_ROOT_PASSWORD: 'pass'
+    ports:
+      - '3308:3306'
+    volumes:
+      - orderdb:/var/lib/mysqlorder
+    networks:
+      - api
+volumes:
+  authdb:
+    driver: local
+  productdb:
+    driver: local
+  orderdb:
+    driver: local
+networks:
+  api:
+    driver: bridge

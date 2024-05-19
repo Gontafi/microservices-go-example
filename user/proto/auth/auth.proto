@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option go_package = "auth.pb";
+
+package auth;
+
+message VerifyTokenRequest {
+  string token = 1;
+}
+
+message VerifyTokenResponse {
+  bool valid = 1;
+  string message = 2;
+  int64 UserID = 3;
+}
+
+service AuthService {
+  rpc VerifyToken (VerifyTokenRequest) returns (VerifyTokenResponse);
+}
