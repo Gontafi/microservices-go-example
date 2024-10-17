@@ -3,17 +3,16 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"user/config"
 )
 
-func Connect(cfg *config.Config) (*sql.DB, error) {
-	dbConn, err := sql.Open(cfg.DBDriver, fmt.Sprintf(
+type DBConnector func(driverName, dataSourceName string) (*sql.DB, error)
+
+func Connect(cfg *config.Config, open DBConnector) (*sql.DB, error) {
+	dbConn, err := open(cfg.DBDriver, fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?parseTime=true&multiStatements=true",
 		cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBPort, cfg.DBName,
-	),
-	)
+	))
 	if err != nil {
 		return nil, err
 	}
@@ -27,5 +26,5 @@ func Connect(cfg *config.Config) (*sql.DB, error) {
 		return nil, err
 	}
 
-	return dbConn, err
+	return dbConn, nil
 }

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"database/sql"
 	"github.com/spf13/cobra"
 	"log"
 	"user/config"
@@ -36,7 +37,7 @@ func checkHealth(cmd *cobra.Command, args []string) {
 }
 
 func checkMysqlHealth() error {
-	conn, err := db.Connect(config.AppConfig)
+	conn, err := db.Connect(config.AppConfig, sql.Open)
 	if err != nil {
 		return err
 	}

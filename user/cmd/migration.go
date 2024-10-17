@@ -36,7 +36,7 @@ func init() {
 
 func migrateDatabase(cmd *cobra.Command, args []string) {
 
-	dbConn, err := db.Connect(config.AppConfig)
+	dbConn, err := db.Connect(config.AppConfig, sql.Open)
 	if err != nil {
 		log.Println(config.AppConfig.DBHost, config.AppConfig.DBPassword, config.AppConfig.DBPort, config.AppConfig.DBUser)
 		log.Printf("Could not connect to db: %s\n", err.Error())

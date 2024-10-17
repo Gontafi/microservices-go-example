@@ -1,10 +1,9 @@
-version: '3.9'
 services:
   auth-app:
     build:
       context: ./user
       dockerfile: Dockerfile
-    command: ["/bin/sh", "-c", "cp .env.example .env && ./server migrate up && ./server start"]
+    command: ["/bin/sh", "-c", "./server migrate up && ./server start"]
     restart: always
     ports:
       - '8080:8080'
@@ -32,7 +31,7 @@ services:
       context: ./product
       dockerfile: Dockerfile
     restart: always
-    command: ["/bin/sh", "-c", "cp .env.example .env && ./server migrate up && ./server start"]
+    command: ["/bin/sh", "-c", "./server migrate up && ./server start"]
     ports:
       - '8082:8082'
       - '8083:8083'
@@ -59,7 +58,7 @@ services:
       context: ./orders
       dockerfile: Dockerfile
     restart: always
-    command: ["/bin/sh", "-c", "cp .env.example .env && ./server migrate up && ./server start"]
+    command: ["/bin/sh", "-c", "./server migrate up && ./server start"]
     ports:
       - '8084:8084'
     networks:

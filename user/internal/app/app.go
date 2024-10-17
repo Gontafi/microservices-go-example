@@ -1,6 +1,7 @@
 package app
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"os"
@@ -17,7 +18,7 @@ import (
 func RunServer(cfg *config.Config) error {
 	log.Println("connecting to db")
 
-	database, err := db.Connect(cfg)
+	database, err := db.Connect(cfg, sql.Open)
 	if err != nil {
 		return err
 	}
